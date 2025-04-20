@@ -126,7 +126,8 @@ def product(request, pk):
 
 
 def home(request):
-    products = Product.objects.all().order_by('-created_at')
+    products = Product.objects.all().order_by('-id')
+
     featured_images = FeaturedImage.objects.all()
     liked_images = request.user.liked_images.values_list('id', flat=True) if request.user.is_authenticated else []
 
