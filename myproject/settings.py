@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv  # قم بإضافة هذه المكتبة لتحميل متغيرات البيئة
-# import dj_database_url
-# import cloudinary
-# import cloudinary.uploader
-# import cloudinary.api
+import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 # Load environment variables from .env file
 load_dotenv()  # قم بتحميل متغيرات البيئة من ملف .env
 
@@ -28,17 +28,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-9p7go%z)ati3-l2ab&6f1o*4ezf3p!9!4ny$j$1m#1+u39&*4#')
 
-DEBUG = True
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 ALLOWED_HOSTS.append('.vercel.app')
 ALLOWED_HOSTS.append('dragonsportswear.store')
-ALLOWED_HOSTS.append('.dragonsportswear.store')  
+ALLOWED_HOSTS.append('.dragonsportswear.store')  # لدعم النطاقات الفرعية
 
 
+# Stripe API Key
+STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')  # قم بإضافة هذا المتغير لقراءة مفتاح Stripe API من متغيرات البيئة
 
-STRIPE_API_KEY = os.getenv('STRIPE_API_KEY') 
-
+# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -87,12 +89,12 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 # DATABASES = {
 
 #     'default': {
@@ -113,9 +115,9 @@ DATABASES = {
 
 
 # }
-# DATABASES = {
-#     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
-# }
+DATABASES = {
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -154,32 +156,32 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
-# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # CLOUDINARY_STORAGE = {
 #     'CLOUD_NAME': 'dliwkyyog',
 #     'API_KEY': '223659487284859',
 #     'API_SECRET': 'HmQ8VWrqXOSkgADBQXahIK8Mjis'
 # }
-# CLOUDINARY_STORAGE = {
-#     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-#     'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-#     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
-# }
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
 
-# cloudinary.config( 
-#   cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'), 
-#   api_key=os.environ.get('CLOUDINARY_API_KEY'), 
-#   api_secret=os.environ.get('CLOUDINARY_API_SECRET')
-# )
-# SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-# SESSION_COOKIE_SECURE = True  
-# SESSION_COOKIE_HTTPONLY = True 
-# SESSION_COOKIE_SAMESITE = 'Lax'  
-# SESSION_COOKIE_AGE = 86400  
-# SESSION_SAVE_EVERY_REQUEST = True 
-# SESSION_EXPIRE_AT_BROWSER_CLOSE = False  
-# CSRF_COOKIE_SECURE = True
+cloudinary.config( 
+  cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'), 
+  api_key=os.environ.get('CLOUDINARY_API_KEY'), 
+  api_secret=os.environ.get('CLOUDINARY_API_SECRET')
+)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_SECURE = True  # تأمين الكوكيز على HTTPS
+SESSION_COOKIE_HTTPONLY = True  # منع الوصول إلى الجلسة من JavaScript
+SESSION_COOKIE_SAMESITE = 'Lax'  # السماح بإرسال الجلسة بين الصفحات
+SESSION_COOKIE_AGE = 86400  # الجلسة تبقى نشطة لمدة يوم واحد
+SESSION_SAVE_EVERY_REQUEST = True  # حفظ الجلسة مع كل طلب
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # لا تحذف الجلسة عند إغلاق المتصفح
+CSRF_COOKIE_SECURE = True
 
 
 # DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
