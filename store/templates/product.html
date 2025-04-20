@@ -2,7 +2,7 @@
 <!--=============== MAIN ===============-->
 <main class="main" id="main">
   <div class="container productcontainer">
-    <div class="product">
+    <div class="product section">
       <!-- Product Image Section -->
       <div class="product-image">
         <img id="mainImage" src="{{ product.image.url }}" alt="Product Image" />
@@ -38,7 +38,7 @@
 
         <!-- إضافة اختيار المقاس -->
         <div class="size-selection">
-          <label for="size" style="color: white">Size:</label>
+          <label for="size" style="color:black">Size:</label>
           <select id="size" name="size" class="size-select">
             {% if product.sizes %} {% for size in product.sizes.split %}
             <option value="{{ size }}">{{ size }}</option>
