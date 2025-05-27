@@ -118,6 +118,9 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 DATABASES = {
     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
+# DATABASES = {
+#     'default': dj_database_url.config(default='postgresql://neondb_owner:npg_3r5tyRFXxLIH@ep-autumn-meadow-a52w91w5-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require')
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
